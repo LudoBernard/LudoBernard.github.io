@@ -9,24 +9,24 @@ Au départ, j'avais envie d'utiliser le Binary Space Partitioning (BSP) pour cr�
 ### Trouver des assets pour les ennemis/l'environnement:
 Ayant une idée claire des types d'ennemis que je voulais ajouter, j'au eu beaucoup de mal à trouver des assets correspondants à ces derniers. Mais après quelques heures de recherche, j'ai réussi à trouver deux monstres: Un slime bleu, et un squelette, les deux suivant le joueur, mais à des vitesses différentes.
 
-![](https://github.com/LudoBernard/LudoBernard.github.io/blob/main/Skeleton.png)
-![](https://github.com/LudoBernard/LudoBernard.github.io/blob/main/Slime.png)
+![](https://LudoBernard.github.io/Skeleton.png)
+![](https://LudoBernard.github.io/Slime.png)
 
 Et pour l'environnement, j'ai trouvé des sprites de donjons, mais je n'ai pas utilisé les murs, les murs sont donc invisibles.
 
-![](https://github.com/LudoBernard/LudoBernard.github.io/blob/main/Dungeon_Tileset.png)
+![](https://LudoBernard.github.io/Dungeon_Tileset.png)
 
 ### Les ennemis qui suivent le joueur:
 J'ai implémenté le "chasing" pour les ennemis. J'ai ajouté un circle collider 2D aux ennemis avec un certain rayon, en IsTrigger, puis j'ai vérifié sur le joueur était dans ce rayon, et si c'était le cas, alors l'ennemis se mettait à suivre le joueur jusqu'à ce qu'il sorte du rayon.
 
-![](https://github.com/LudoBernard/LudoBernard.github.io/blob/main/CodeEnemiesRadius.png)
+![](https://LudoBernard.github.io/CodeEnemiesRadius.png)
 
 J'ai fait le choix de ne pas implémenter le Pathfinding car je voulais me concentrer sur le Cellular Automata, mais aussi car cette solution me convenait assez bien.
 
 ### Ajouter des murs/colliders au donjon:
 Grâce au cours, j'ai réussi (pas seul) à implémenter l'ajout de Colliders sur les cellules mortes qui sont autour des cellules vivantes.
 
-![](https://github.com/LudoBernard/LudoBernard.github.io/blob/main/Colliders.png)
+![](https://LudoBernard.github.io/Colliders.png)
 
 ## Conclusion: 
 Pour conclure, ce projet n'était vraiment pas facile à créer, il manque beaucoup de choses, telles que des sons, certaines animations, des mécaniques, des assets...
