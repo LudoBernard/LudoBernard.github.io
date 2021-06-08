@@ -1,37 +1,6 @@
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/LudoBernard/LudoBernard.github.io/edit/main/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/LudoBernard/LudoBernard.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Blogpost Technique Génération Procédurale et Intelligence Artificielle
+## Introduction et contexte:
+Pour le module GPR440, j'avais eu pour projet de développer un jeu avec la génération procédurale ainsi que l'intelligence artificielle. Le but de ce projet était de créer un jeu qui génère des caves procéduralement, avec des ennemis, et un objectif à trouver.
+## Les problèmes rencontrés lors du développement:
+### L'implémentation de la génération procédurale:
+Au départ, j'avais envie d'utiliser le Binary Space Partitioning (BSP) pour créer des niveaux procéduralement, ressemblant à un bâtiment ou une sorte de laboratoire. Cependant, après avoir remarqué la difficulté de cette méthode, j'ai opté pour une méthode plus simple, le **Cellular Automata**.
