@@ -74,12 +74,8 @@ In my scene, I used the **Blinn-Phong** shading model, which uses light maps to 
 
 <p align="center">
  <img width="800" height="216" src="../img/opengl/phong.png">
- <em> Phong Model </em>
- </p>
-
----
-<p align="center">
- <img width="400" height="300" src="../img/opengl/blinnphong.png">
+ <em> Phong Model </em><br><br>
+ <img width="400" height="300" src="../img/opengl/blinnphong.png"><br>
  <em> Blinn-Phong Model </em>
  </p>
 
@@ -315,6 +311,8 @@ Our scene should now look more realistic:
 Perfect! We gave our scene more life and more realism with this simple implementation.
 
 ## Post-Processing with Framebuffers
+
+
 
 ## Instancing multiple models
 
