@@ -461,6 +461,27 @@ And this does it for my 3D scene in OpenGL, we did a lot of things, but of cours
 
 ## Features I couldn't implement
 
+### Shadow Mapping
 
+To render realistic shadows, we can use shadow mapping to calculate a pixel's depth value and either set it to black or color. After trying to implement shadow mapping for a week I couldn't make it work and ended up with a pretty interesting bug:
+
+<p align="center">
+<img width="800" height="400" src="../img/opengl/shadowdisaster.png"><br>
+</p>
+
+### Frustum culling
+
+To optimize my scene, I used backface culling, which prevented the faces that we couldn't see from being drawn on screen. To optimize my scene even further, I could have implemented frustum culling, which uses the *frustum*, the region of space in the world that appears on screen.
+Frustum culling discards any object that is not visible on screen and doesn't call the draw function on it, which saves a lot more time and makes the program run way faster and smoother.
+Unfortunately due to the complexity of the implementation and my lack of time I decided to skip it.
 
 ## Conclusion
+
+To conclude this blogpost, this was a very fun experience, even if I hit some roadblocks pretty frequently. But having a visual feedback felt good, especially after not working with graphical projects too much, and seeing where things went wrong made bug-fixing way easier.
+
+As mentionned earlier, there are a lot of features that I wanted to implement but couldn't, for example HDR and Bloom, or Blending, or Frustum culling.
+
+There are many other features that I implemented but didn't mention, such as backface culling, normal mapping, camera, stencil, and adding textures.
+The goal of this post was to showcase the biggest steps.
+
+Though I'm not 100% proud of my scene, I'm pretty proud of the progress I made and the features I implemented, because it was definitely not easy.
