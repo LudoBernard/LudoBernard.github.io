@@ -1,1 +1,0 @@
-# Blogpost Technique Computer Graphics
