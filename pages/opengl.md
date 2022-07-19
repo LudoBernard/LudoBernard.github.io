@@ -63,7 +63,7 @@ void main() {
  <img width="400" height="300" src="../img/opengl/triangle.png">
  </div>
 
-
+ ---
  We can now create colored shapes in our scene, in this example our triangle was in 2D, but we can create cubes and other shapes in 3D, and add textures to them.
 
 ## Creating lights
@@ -135,6 +135,7 @@ After implementing the lights correctly, our scene should look like this:
 <img width="494" height="364" src="../img/opengl/directional.png">
 </div>
 
+---
 We now have lights in our scene! 
 
 ## Loading a model
@@ -239,6 +240,7 @@ class Mesh
 <img width="300" height="300" src="../img/opengl/model.png">
 </div>
 
+---
 Our model is correctly implemented in our scene! However the scene looks a bit empty...
 
 ## Adding a Cubemap
@@ -305,9 +307,10 @@ glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 Our scene should now look more realistic:
 
  <div align="center">
-<img width="800" height="600" src="../img/opengl/cubemap.png">
+<img width="800" height="700" src="../img/opengl/cubemap.png">
 </div>
 
+---
 Perfect! We gave our scene more life and more realism with this simple implementation.
 
 ## Post-Processing with Framebuffers
