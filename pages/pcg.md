@@ -1,4 +1,4 @@
-## Blogpost Technique Génération Procédurale et Intelligence Artificielle
+## Génération Procédurale et Intelligence Artificielle
 ## Introduction et contexte:
 Pour le module GPR440, j'avais eu pour projet de développer un jeu avec la génération procédurale ainsi que l'intelligence artificielle. Le but de ce projet était de créer un jeu qui génère des caves procéduralement, avec des ennemis, et un objectif à trouver.
 
