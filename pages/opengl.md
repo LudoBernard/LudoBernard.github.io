@@ -205,7 +205,33 @@ class Mesh
 
  *<center> Model class </center>*
 
- The functions inside the Model class are going to iterate through each mesh, and get their vertices and indices. After that, we will be able to draw our model and display it on the screen. We will also be able to move it with translations or rotations, or even scaling.
+ The functions inside the Model class are going to iterate through each mesh, and get their vertices and indices. After that, we will be able to draw our model and display it on the screen. We will also be able to move it with translations or rotations, or even scaling:
+
+ ```glsl
+ Mesh processMesh(aiMesh *mesh, const aiScene *scene)
+{
+    vector<Vertex> vertices;
+    vector<unsigned int> indices;
+    vector<Texture> textures;
+
+    for(unsigned int i = 0; i < mesh->mNumVertices; i++)
+    {
+        Vertex vertex;
+        // Process vertex positions, normals and texture coordinates
+        [...]
+        vertices.push_back(vertex);
+    }
+    // Process indices
+    [...]
+    // Process material
+    if(mesh->mMaterialIndex >= 0)
+    {
+        [...]
+    }
+
+    return Mesh(vertices, indices, textures);
+} 
+ ```
 
  Once we initialized and bound our model, and called the draw function inside our Update method, this is what we get:
 
@@ -216,6 +242,73 @@ class Mesh
 Our model is correctly implemented in our scene! However the scene looks a bit empty...
 
 ## Adding a Cubemap
+
+Having a completely black background can feel empty and lifeless. To change that, we can add a cubemap to our scene.
+
+A cubemap is a texture that contains 6 2D textures that when combined, form a cube!
+To implement it, we simply need to create it just like we would any textures, with the exception of using *GL_TEXTURE_CUBE_MAP* as a specifier in our *glBindTexture()* function:
+
+```glsl
+unsigned int cubemapTexture;
+glGenTextures(1, &cubemapTexture);
+glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+```
+
+ We also can't forget that OpenGL gives us 6 special texture targets when it comes to the faces of a map: 
+
+|Texture target|Orientation|
+|---|:---:|
+|GL_TEXTURE_CUBE_MAP_POSITIVE_X|Right|
+|GL_TEXTURE_CUBE_MAP_NEGATIVE_X|Left|
+|GL_TEXTURE_CUBE_MAP_POSITIVE_Y|Top|
+|GL_TEXTURE_CUBE_MAP_NEGATIVE_Y|Bottom|
+|GL_TEXTURE_CUBE_MAP_POSITIVE_Z|Back|
+|GL_TEXTURE_CUBE_MAP_NEGATIVE_Z|Front|
+
+Since a cubemap contains six 2D textures, we need to call *glTexImage2D()* 6 times:
+
+```glsl
+int width, height, nrChannels;
+unsigned char *data;  
+for(unsigned int i = 0; i < textures_faces.size(); i++)
+{
+    // Load our textures
+    data = stbi_load(textures_faces[i].c_str(), &width, &height, &nrChannels, 0);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+}
+```
+
+After loading our cubemap, we need to specify the faces, and create simple shaders that will display the cubemap:
+
+```glsl
+vector<std::string> faces;
+{
+    "right.jpg",
+    "left.jpg",
+    "top.jpg",
+    "bottom.jpg",
+    "front.jpg",
+    "back.jpg"
+};
+```
+
+One thing to note is that we need to make sure the cubemap is drawn on another cube that we created, with its own VAO and VBO.
+
+We also need to make sure the cubemap is drawn after the scene. This helps us save some bandwidth since we don't need to draw on a pixel twice.
+
+The last thing we need to be careful of is the cubemap's transformation matrix, indeed, we need to remove the translation matrix from our cubemap if we want it to stay still while we are moving:
+
+```glsl
+glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));  
+```
+
+Our scene should now look more realistic:
+
+ <div align="center">
+<img width="800" height="600" src="../img/opengl/cubemap.png">
+</div>
+
+Perfect! We gave our scene more life and more realism with this simple implementation.
 
 ## Post-Processing with Framebuffers
 
