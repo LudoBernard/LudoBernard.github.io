@@ -39,6 +39,7 @@ void main() {
 
  *<center> Vertex shader </center>*
 
+
  ```glsl
  #version 310 es
 precision highp float;
@@ -52,10 +53,13 @@ void main() {
 }
 ```
  *<center> Fragment shader </center>*
-
+ 
+ ---
  Now that our shaders are written, we need to compile them and bind them to our program, and draw our triangle between the clear and the swap, which gives us this result:
 
- ![](../img/opengl/triangle.png)
+ <p align="center">
+ <img align="center" width="300" height="300" src="../img/opengl/triangle.png">
+ </p>
 
 
 
