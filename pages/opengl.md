@@ -23,12 +23,12 @@ out vec3 fragColor;
 
 // Give our vertices positions
 vec2 positions[3] = vec2[](
-        ...
+        [...]
 );
 
 // Give the colors at each vertex
 vec3 colors[3] = vec3[](
-        ...
+        [...]
 );
 
 void main() {
@@ -312,9 +312,99 @@ Perfect! We gave our scene more life and more realism with this simple implement
 
 ## Post-Processing with Framebuffers
 
+To add effects to our screen, or to create render textures, we can use what's called a Framebuffer. OpenGL gives us the flexibility to define our own framebuffers and define our own color (or depth & stencil) on them.
 
+To create a framebuffer, just like any object, we need a *framebuffer object* (also FBO): 
+
+```glsl
+// Generate frame buffer
+glGenFramebuffers(1, &framebuffer);
+glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+// Check if framebuffer is complete
+if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+{
+	// Else execute sad dance
+	std::cerr << "ERROR: FRAMEBUFFER NOT COMPLETE." << std::endl;
+}
+
+// Back to default buffer
+glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+```
+
+When we attach a texture to a framebuffer, all the draw calls will write to that texture as if it was a normal color buffer. To create a texture for a framebuffer we simply need to do it like normal:
+
+```glsl
+// Create the texture
+glGenTextures(1, &textureColorbuffer);
+glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glBindTexture(GL_TEXTURE_2D, 0);
+
+// Attach it to currently bound framebuffer object
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+```
+
+To switch between buffers faster, and to also store depth and stencil data into a write-only buffer, creating Renderbuffers is the perfect occasion. To create one we have to do almost the same thing as we did with the framebuffer:
+
+```glsl
+// Generate and bind rbo
+glGenRenderbuffers(1, &rbo);
+glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1280, 720);
+glBindRenderbuffer(GL_RENDERBUFFER, 0);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+```
+
+We now have our Framebuffer implemented! To now draw the scene onto a single texture we have to go through two passes, drawing the scene on the framebuffer's texture, then bind to the default framebuffer and draw a quad on screen with the framebuffer's color buffer as its texture:
+
+```glsl
+// First pass
+glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using the stencil buffer now
+glEnable(GL_DEPTH_TEST);
+DrawScene();	
+  
+// Second pass
+glBindFramebuffer(GL_FRAMEBUFFER, 0); // Back to default
+glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
+glClear(GL_COLOR_BUFFER_BIT);
+  
+screenShader.use();  
+glBindVertexArray(quadVAO);
+glDisable(GL_DEPTH_TEST);
+glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+glDrawArrays(GL_TRIANGLES, 0, 6);  
+```
+
+If we run the code using this implementation, nothing is going to appear different, so to make sure we correctly implemented the framebuffer, we are going to add some post-processing effects!
+
+There are many post-processing effects out there, but the one I'm going to be using is the blur effect. To create it, we need to create a shader for it, and add a *kernel*, which is a convolution matrix, which is going to modify every pixel based on it's neighbouring pixels:
+
+```glsl
+float kernel[9] = float[](
+        1.0/16.0, 2.0/16.0, 1.0/16.0,
+        2.0/16.0, 4.0/16.0, 2.0/16.0,
+        1.0/16.0, 2.0/16.0, 1.0/16.0
+);
+```
+*<center>Blur kernel</center>*
+
+We can now run our program and...
+
+ <p align="center">
+<img width="800" height="600" src="../img/opengl/blur.png"><br>
+</p>
+
+We now have Post-Processing effects!
 
 ## Instancing multiple models
+
+Drawing one model at a time is time consuming and not optimized at all.
 
 ## Normal mapping
 
