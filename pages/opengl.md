@@ -304,7 +304,7 @@ glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 Our scene should now look more realistic:
 
  <p align="center">
-<img width="800" height="700" src="../img/opengl/cubemap.png"><br>
+<img width="800" height="400" src="../img/opengl/cubemap.png"><br>
 </p>
 
 
@@ -330,7 +330,6 @@ if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 
 // Back to default buffer
 glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
 ```
 
 When we attach a texture to a framebuffer, all the draw calls will write to that texture as if it was a normal color buffer. To create a texture for a framebuffer we simply need to do it like normal:
@@ -397,17 +396,71 @@ float kernel[9] = float[](
 We can now run our program and...
 
  <p align="center">
-<img width="800" height="600" src="../img/opengl/blur.png"><br>
+<img width="800" height="400" src="../img/opengl/blur.png"><br>
 </p>
 
 We now have Post-Processing effects!
 
 ## Instancing multiple models
 
-Drawing one model at a time is time consuming and not optimized at all.
+Drawing one model at a time is very slow and not optimized at all. To fix that, we could try drawing each of the same model's meshes at the **same time**. Which is the reason why **Instancing** exists.
 
-## Normal mapping
+To do some instancing, we first need to change something about our vertex shader:
+```glsl
+layout (location = 0) in vec3 aPos;
+layout (location = 2) in vec2 aTexCoords;
+layout (location = 3) in mat4 instanceMatrix;
+```
+
+We need to add a new 4x4 matrix input called *instanceMatrix* to do our calculations for each matrix we are going to pass through this shader. We're no longer using a model uniform variable.
+
+Since a matrix is basically 4 *vec4*s, we need to reserve 4 vertex attributes then set each of these attribute pointers:
+
+```glsl
+// Vertex buffer object
+unsigned int buffer;
+glGenBuffers(1, &buffer);
+glBindBuffer(GL_ARRAY_BUFFER, buffer);
+glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+  
+for(unsigned int i = 0; i < rock.meshes.size(); i++)
+{
+    unsigned int VAO = rock.meshes[i].VAO;
+    glBindVertexArray(VAO);
+
+    // Vertex attributes
+    std::size_t vec4Size = sizeof(glm::vec4);
+    glEnableVertexAttribArray(3); 
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+    glEnableVertexAttribArray(4); 
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(1 * vec4Size));
+    glEnableVertexAttribArray(5); 
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+    glEnableVertexAttribArray(6); 
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
+    glBindVertexArray(0);
+}  
+```
+
+Now that everything has been declared, we simply need to create another *Draw()* function, which takes in an *amount* parameter, and use the *glDrawElementsInstanced()* function instead of the usual *glDrawElements()* function.
+
+Let's run our program:
+
+<p align="center">
+<img width="800" height="400" src="../img/opengl/instancing.png"><br>
+</p>
+
+We can now render multiple elements at the same time!
+And this does it for my 3D scene in OpenGL, we did a lot of things, but of course there are so many other things left that I haven't implemented.
 
 ## Features I couldn't implement
+
+
 
 ## Conclusion
